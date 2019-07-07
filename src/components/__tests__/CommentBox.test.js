@@ -1,11 +1,16 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import Root from 'Root';
 import CommentBox from 'components/CommentBox';
 
 let wrapped;
 
 beforeEach(() => {
-  wrapped = mount(<CommentBox />);
+  wrapped = mount(
+    <Root>
+      <CommentBox />
+    </Root>
+  );
 });
 
 afterEach(() => {
@@ -17,16 +22,19 @@ it('shows a textarea and a button', () => {
   expect(wrapped.find('button').length).toBe(1);
 });
 
-it('allows users to edit the textarea', () => {
-  wrapped.find('textarea').simulate('change', { target: { value: 'test' } });
-  wrapped.update();
-  expect(wrapped.find('textarea').prop('value')).toBe('test');
-});
+describe('the text area', () => {
+  beforeEach(() => {
+    wrapped.find('textarea').simulate('change', { target: { value: 'test' } });
+    wrapped.update();
+  });
 
-it('clears textarea after submit', () => {
-  wrapped.find('textarea').simulate('change', { target: { value: 'test' } });
-  wrapped.update();
-  wrapped.find('form').simulate('submit');
-  wrapped.update();
-  expect(wrapped.find('textarea').prop('value')).toBe('');
+  it('allows users to edit the textarea', () => {
+    expect(wrapped.find('textarea').prop('value')).toBe('test');
+  });
+
+  it('clears textarea after submit', () => {
+    wrapped.find('form').simulate('submit');
+    wrapped.update();
+    expect(wrapped.find('textarea').prop('value')).toBe('');
+  });
 });

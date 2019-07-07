@@ -1,7 +1,19 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 const CommentList = props => {
-  return <div>CommentList</div>;
+  if (!props.comments.length) {
+    return <p>No comments</p>;
+  }
+  return (
+    <ul>
+      {props.comments.map(comment => (
+        <li>{comment}</li>
+      ))}
+    </ul>
+  );
 };
 
-export default CommentList;
+const mapStateToProps = ({ comments }) => ({ comments });
+
+export default connect(mapStateToProps)(CommentList);
